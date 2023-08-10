@@ -1,20 +1,6 @@
 // const { ReadableStreamDefaultReader } = require('web-streams-polyfill/ponyfill/es2018');
 import { Buffer } from "buffer";
 
-async function readInto(reader, buffer) {
-  let offset = 0;
-  while (offset < buffer.byteLength) {
-    const { value, done } = await reader.read(new Uint8Array(buffer, offset));
-    if (done) {
-      break;
-    }
-    buffer = value.buffer;
-    offset += value.byteLength;
-  }
-  return buffer;
-}
-let buffer1 = new ArrayBuffer(1);
-
 export const threadDataReceive = async (
   serialPort,
   dataFrameSof,

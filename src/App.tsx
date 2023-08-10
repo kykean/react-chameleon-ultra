@@ -1,7 +1,5 @@
 // @ts-nocheck
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 // import './App.css'
 import useSWR from "swr";
 import { Button, Container } from "semantic-ui-react";
