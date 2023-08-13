@@ -5,7 +5,8 @@ export const threadDataReceive = async (
   serialPort,
   dataFrameSof,
   dataMaxLength = 512,
-  waitResponseMap
+  waitResponseMap1,
+  cache
 ) => {
   const dataBuffer = [];
   let dataPosition = 0;
@@ -65,6 +66,8 @@ export const threadDataReceive = async (
           console.log(
             `Buffer data = ${Buffer.from(dataBuffer).toString("hex")}`
           );
+          const waitResponseMap = cache.get("WAIT_RESPONSE_MAP")?.data;
+          console.log(waitResponseMap);
           if (dataCmd in waitResponseMap) {
             const callback = waitResponseMap[dataCmd]?.callback;
             const dataResponse = Buffer.from(
@@ -72,7 +75,7 @@ export const threadDataReceive = async (
             );
             if (typeof callback === "function") {
               callback(dataCmd, dataStatus, dataResponse);
-              delete waitResponseMap[dataCmd];
+              // delete waitResponseMap[dataCmd];
             } else {
               waitResponseMap[dataCmd].response = {
                 dataCmd,
