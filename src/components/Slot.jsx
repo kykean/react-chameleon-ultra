@@ -5,6 +5,7 @@ import { Buffer } from "buffer";
 import { useWaitResponseMap } from "../hooks/waitResponseMap";
 import {
   DATA_CMD_GET_SLOT_TAG_NICK,
+  DATA_CMD_SET_SLOT_ACTIVATED,
   DATA_CMD_SET_SLOT_TAG_NICK,
   useSlotsMap,
 } from "../hooks/command";
@@ -23,51 +24,72 @@ const Slot = (props) => {
     <Card>
       <Card.Content>
         <Label attached="top right">{slot}</Label>
-        <Card.Header>Steve Sanders</Card.Header>
-        <Card.Meta>Friends of Elliot</Card.Meta>
+        <Card.Header>Header</Card.Header>
+        <Card.Meta>Meta data</Card.Meta>
         <Card.Description>{JSON.stringify(slotsMap[slot])}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <div className="ui two buttons">
-          <Button basic color="green">
+          <Button
+            basic
+            color="green"
+            onClick={() => {
+              mutateWrMap({
+                [DATA_CMD_SET_SLOT_ACTIVATED]: {
+                  callback: (dataCmd, dataStatus, dataResponse) => {
+                    console.log(dataResponse);
+                    // enqueueSnackbar(`Set to reader mode success`, "success");
+                  },
+                },
+              });
+
+              sendData({
+                cmd: DATA_CMD_SET_SLOT_ACTIVATED,
+                status: 0x00,
+                data: slot - 1,
+              });
+            }}
+          >
             Enable
           </Button>
           <Button basic color="red">
             Disable
           </Button>
         </div>
-
-        <Input
-          value={inputData.nickSt1}
-          onChange={(e, data) => {
-            setInputData((prev) => ({ ...prev, nickSt1: data.value }));
-          }}
-          action={{
-            content: "set Nick st1",
-            onClick: () => {
-              // mutateWrMap({
-              //   [DATA_CMD_SET_SLOT_TAG_NICK]: {
-              //     callback: (dataCmd, dataStatus, dataResponse) => {
-              //       mutateSlotsMap((data) => ({
-              //         ...data,
-              //         [slot]: {
-              //           ...data[slot],
-              //           nick1: Buffer.from(dataResponse).toString(),
-              //         },
-              //       }));
-              //     },
-              //   },
-              // });
-              const buf1 = Buffer.from([slot, 1]);
-              const buf = Buffer.from(inputData.nickSt1, "utf8");
-              sendData({
-                cmd: DATA_CMD_SET_SLOT_TAG_NICK,
-                status: 0,
-                data: Buffer.concat([buf1, buf]),
-              });
-            },
-          }}
-        />
+        <div>
+          <Input
+            size="mini"
+            value={inputData.nickSt1}
+            onChange={(e, data) => {
+              setInputData((prev) => ({ ...prev, nickSt1: data.value }));
+            }}
+            action={{
+              content: "set Nick st1",
+              onClick: () => {
+                // mutateWrMap({
+                //   [DATA_CMD_SET_SLOT_TAG_NICK]: {
+                //     callback: (dataCmd, dataStatus, dataResponse) => {
+                //       mutateSlotsMap((data) => ({
+                //         ...data,
+                //         [slot]: {
+                //           ...data[slot],
+                //           nick1: Buffer.from(dataResponse).toString(),
+                //         },
+                //       }));
+                //     },
+                //   },
+                // });
+                const buf1 = Buffer.from([slot, 1]);
+                const buf = Buffer.from(inputData.nickSt1, "utf8");
+                sendData({
+                  cmd: DATA_CMD_SET_SLOT_TAG_NICK,
+                  status: 0,
+                  data: Buffer.concat([buf1, buf]),
+                });
+              },
+            }}
+          />
+        </div>
 
         <Button.Group widths={2}>
           <Button

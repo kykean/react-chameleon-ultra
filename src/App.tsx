@@ -6,6 +6,7 @@ import { Button, Container } from "semantic-ui-react";
 import { Buffer } from "buffer";
 import struct from "python-struct";
 import SerialCommunication from "./Serial1";
+import { SnackbarProvider } from "notistack";
 
 const BATTERY_STATUS = "BATTERY_STATUS";
 const SOF = 0x11;
@@ -28,9 +29,11 @@ function App() {
   const [count, setCount] = useState(0);
   const { data: server, isLoading, mutate } = useSWR("ChameleonUltra");
   return (
-    <Container>
-      <SerialCommunication />
-    </Container>
+    <SnackbarProvider>
+      <Container>
+        <SerialCommunication />
+      </Container>
+    </SnackbarProvider>
   );
 }
 
