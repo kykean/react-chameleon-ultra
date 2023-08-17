@@ -92,15 +92,16 @@ const SerialCommunication = () => {
   };
 
   const disconnectSerial = async () => {
-    if (port) {
-      try {
-        await port.readable.getReader().releaseLock();
-        await port.close();
-        setPort(null);
-      } catch (error) {
-        console.error("Error closing serial port:", error);
-      }
-    }
+    window.location.reload();
+    // if (port) {
+    //   try {
+    //     await port.readable.getReader().releaseLock();
+    //     await port.close();
+    //     setPort(null);
+    //   } catch (error) {
+    //     console.error("Error closing serial port:", error);
+    //   }
+    // }
   };
 
   const sendData = useCallback(
@@ -146,7 +147,7 @@ const SerialCommunication = () => {
           <Card>
             <Card.Content>
               <Card.Header>Device</Card.Header>
-              <Card.Meta>Friends of Elliot</Card.Meta>
+              <Card.Meta>meta data</Card.Meta>
               <Card.Description>
                 <div style={{ whiteSpace: "pre" }}>
                   {JSON.stringify(deviceState, null, " ")}
