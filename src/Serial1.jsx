@@ -11,31 +11,32 @@ import {
 import { useWaitResponseMap } from "./hooks/waitResponseMap";
 import { Button, ButtonGroup, Card } from "semantic-ui-react";
 import Slot from "./components/Slot";
-import { useSWRConfig } from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import {
   DATA_CMD_CHANGE_MODE,
   DATA_CMD_GET_DEVICE_CHIP_ID,
   DATA_CMD_MF1_NT_LEVEL_DETECT,
   DATA_CMD_SCAN_14A_TAG,
+  DATA_CMD_SCAN_EM410X_TAG,
   useDeviceState,
   useSlotsMap,
 } from "./hooks/command";
 import { parse14AScanTagResult } from "./utils/parse";
 import { createCallback } from "./utils/createCallback";
+import EM410Content from "./components/EM410x/Content";
 const fromHexString = (hexString) =>
   Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
 
 const slots = [1, 2, 3, 4, 5, 6, 7, 8];
-// let slotsMapState = slots.reduce((acc, cur) => {
-//   acc[cur] = {};
-//   return acc;
-// }, {});
+
+const PORT = "PORT";
 
 const SerialCommunication = () => {
   const { cache } = useSWRConfig();
 
   const { data: wrMap, mutate: mutateWrMap } = useWaitResponseMap();
-  const [port, setPort] = useState(null);
+  // const [port, setPort] = useState(null);
+  const { data: port, mutate: mutatePort } = useSWR(PORT);
   const [isSerialSupported, setIsSerialSupported] = useState(false);
 
   const {
@@ -78,7 +79,8 @@ const SerialCommunication = () => {
         filters: [{ usbVendorId: 0x6868 }],
       });
       await serialPort.open({ baudRate: 115200, bufferSize: DATA_MAX_LENGTH }); // Adjust baud rate as needed
-      setPort(serialPort);
+      // setPort(serialPort);
+      mutatePort(serialPort);
       threadDataReceive(
         serialPort,
         DATA_FRAME_SOF,
@@ -296,6 +298,9 @@ const SerialCommunication = () => {
                   14a Info
                 </Button>
               </ButtonGroup>
+            </Card.Content>
+            <Card.Content>
+              <EM410Content></EM410Content>
             </Card.Content>
           </Card>
 

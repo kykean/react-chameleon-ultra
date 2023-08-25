@@ -31,6 +31,13 @@ function App() {
   return (
     <SnackbarProvider>
       <Container>
+        <p>
+          {" "}
+          Tip: When the color of the card slot is R, the card slot is enabled
+          with IC simulation + ID simulation at the same time. When the color of
+          the card slot is G, the card slot only enables IC card simulation,
+          When the card slot color is B, only ID card simulation is enabled{" "}
+        </p>
         <SerialCommunication />
       </Container>
     </SnackbarProvider>
